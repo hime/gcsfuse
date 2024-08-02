@@ -69,6 +69,13 @@ func init() {
 
 // fsErrStr maps an error to a error string. Uncommon errors are aggregated to
 // reduce the cardinality of the fs error to save the monitoring cost.
+func fsErrTypeStr(err error) string {
+	// TODO: Implemet narrowing of error
+	return ""
+}
+
+// fsErrStr maps an error to a error string. Uncommon errors are aggregated to
+// reduce the cardinality of the fs error to save the monitoring cost.
 func fsErrStr(err error) string {
 	if err == nil {
 		return ""
@@ -97,11 +104,13 @@ func recordOp(ctx context.Context, method string, start time.Time, fsErr error) 
 
 	// Recording opErrorCount.
 	if fsErr != nil {
+		fsErrType := fsErrTypeStr(fsErr)
 		if err := stats.RecordWithTags(
 			ctx,
 			[]tag.Mutator{
 				tag.Upsert(tags.FSOp, method),
 				tag.Upsert(tags.FSError, fsErrStr(fsErr)),
+				tag.Upsert(tags.FSErrorType, fsErrType),
 			},
 			opsErrorCount.M(1),
 		); err != nil {

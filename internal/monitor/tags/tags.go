@@ -32,6 +32,9 @@ var (
 	// FSError annotates the file system failed operations with the error type
 	FSError = tag.MustNewKey("fs_error")
 
+	//FSErrorType
+	FSErrorType = tag.MustNewKey("fs_error_type")
+
 	// ReadType annotates the read operation with the type - Sequential/Random
 	ReadType = tag.MustNewKey("read_type")
 
